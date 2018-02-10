@@ -13,7 +13,9 @@ import data.downloadData;
 import entitites.Company;
 import entitites.Counter;
 import entitites.Share;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -58,8 +60,13 @@ public class Overlord implements ServletContextListener {
             scheduler.start();
 
             testJobTrigger();
-            updateSharesTrigger();
-            resetDailyprobeNumberTrigger();
+          //  companyController.getTwoToCompare(avaibleCompanies.get(4), 128);
+         //   System.out.println("test: " + companyController.getLastShare(avaibleCompanies.get(4)).getProbeDate());
+         
+            analyzeChanges(96, 1.0);
+         
+            //      updateSharesTrigger();
+            //    resetDailyprobeNumberTrigger();
 
             System.out.println("Starting suceeded.");
         } catch (Exception e) {
@@ -146,13 +153,13 @@ public class Overlord implements ServletContextListener {
             System.out.println("Error in updateSharesTrigger: " + e.getMessage());
         }
     }
-    
+
     private void resetDailyprobeNumberTrigger() {
         try {
             JobDetail job = newJob(resetDailyProbeNumberJob.class).withIdentity("resetDailyProbeNumberJob", "resetDailyProbeNumberJob").build();
             Trigger trigger = newTrigger()
                     .withIdentity("resetDailyProbeNumberTrigger", "resetDailyProbeNumberJob")
-                    .withSchedule(cronSchedule("0 0 20 ? * MON-FRI"))
+                    .withSchedule(cronSchedule("50 59 8 ? * MON-FRI"))
                     .forJob(job)
                     .build();
             scheduler.scheduleJob(job, trigger);
@@ -160,7 +167,41 @@ public class Overlord implements ServletContextListener {
             System.out.println("Error in resetDailyProbeNumberTrigger: " + e.getMessage());
         }
     }
+
+    /*
+    public HashMap<Company,Integer> iowbfiw(Integer desiredChange, Integer periodInProbes){
+        HashMap<Company,Integer> intrestingCompanies= new HashMap<>();
+        
+        for(Company company:avaibleCompanies){
+            
+        }
+        
+    }
     
-    
+     */
+    private List<Company> analyzeChanges(Integer probePeriod, Double percentChange) {
+        List<Company> intestingCompanies = new ArrayList<>();
+        List<Share> toCompare;
+
+        for (Company company : avaibleCompanies) {
+            toCompare = companyController.getTwoToCompare(company, probePeriod);
+            if(ifShareVealueChangedBy(toCompare.get(0), toCompare.get(1), percentChange)){
+                intestingCompanies.add(company);
+                System.out.println(company);
+            }
+        }
+        
+        return intestingCompanies;
+
+    }
+    private boolean ifShareVealueChangedBy(Share shareBefore, Share shareAfter, Double percentChange){
+        //System.out.println("Cena 1: "+shareBefore.getValue()+" Cena 2: "+shareAfter.getValue());
+        Double toPercent=((shareAfter.getValue()-shareBefore.getValue())/shareBefore.getValue())*100;
+        if(Math.abs(toPercent)>=percentChange){
+            System.out.println("Wyliczona zmiana: "+toPercent);
+            return true;
+        }
+        return false;
+    }
 
 }

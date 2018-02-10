@@ -16,5 +16,6 @@ public class Constants {
    public static final String WIG30 = "WIG30";
    public static final String BANKIER = "http://www.bankier.pl/inwestowanie/profile/quote.html?symbol=";
    public static final String COLLECTING_SHARES_PERIOD="5";
+   public static final int PROBES_IN_8H_PERIOD=96;
     
 }

@@ -131,7 +131,7 @@ public class Company implements Serializable {
 
     @Override
     public String toString() {
-        return "entitites.Company[ companyId=" + companyId + " ]";
+        return "entitites.Company[ companyId=" + name + " ]";
     }
     
 }
