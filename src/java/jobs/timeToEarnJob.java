@@ -14,11 +14,11 @@ import org.quartz.JobExecutionException;
  *
  * @author Kingu
  */
-public class updateSharesJob implements Job{
+public class timeToEarnJob implements Job {
 
     @Override
     public void execute(JobExecutionContext jec) throws JobExecutionException {
-        Overlord.sendSharesToDatabase();     
+        Overlord.operateOracle();
     }
-    
+
 }

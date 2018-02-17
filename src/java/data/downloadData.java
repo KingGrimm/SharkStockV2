@@ -34,7 +34,7 @@ public class downloadData {
         downloadedSiteElements = downloadedSite.select("tbody td");
     }
 
-    public void analyze() {
+    public void saveToCorrespondingLists() {
         downloadedCompanies = new ArrayList<>();
         downloadedShares = new ArrayList<>();
         try {
@@ -57,9 +57,11 @@ public class downloadData {
                 downloadedCompanies.add(company);
                 downloadedShares.add(share);
             }
+            /*
             for (int i = 0; i < downloadedCompanies.size(); i++) {
                 System.out.println(downloadedCompanies.get(i).getName() + " (" + downloadedCompanies.get(i).getSymbol() + "): " + downloadedShares.get(i).getValue());
             }
+*/
         } catch (Exception e) {
             System.out.println("Error in runWIG30Check: " + e.getMessage());
         }
